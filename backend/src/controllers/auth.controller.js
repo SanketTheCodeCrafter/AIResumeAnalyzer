@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { userModel } from "../models/user.model.js";
+import { blacklistTokenModel } from "../models/blacklist.model.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -110,6 +111,74 @@ export const loginUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to login",
+      error: error.message,
+    });
+  }
+};
+
+
+export const logoutUser = async (req, res) => {
+  try {
+    // Get token from cookie
+    const token = req.cookies?.token || req.headers["authorization"]?.split(" ")[1];
+
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        message: "No token provided for logout.",
+      });
+    }
+
+    // Verify the token is valid (optional but recommended)
+    try {
+      jwt.verify(token, process.env.JWT_SECRET);
+    } catch (verifyError) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token.",
+      });
+    }
+
+    // Add token to blacklist
+    await blacklistTokenModel.create({ token });
+
+    // Clear the cookie (if using cookies)
+    res.clearCookie("token", {
+      httpOnly: true,
+      sameSite: "strict",
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Logout successful. Token blacklisted.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to logout.",
+      error: error.message,
+    });
+  }
+};
+
+export const getUser = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "User details fetched successfully",
+      user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to get user details", 
       error: error.message,
     });
   }
