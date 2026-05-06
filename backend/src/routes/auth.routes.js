@@ -21,9 +21,9 @@ router.post("/login", loginUser);
 /**
  * @route POST/api/auth/logout
  * @description Logout a user by blacklisting the token
- * @access Public
+ * @access Private
  */
-router.post("/logout", logoutUser);
+router.post("/logout", authUser, logoutUser);
 
 /**
  * @route GET/api/auth/get-user

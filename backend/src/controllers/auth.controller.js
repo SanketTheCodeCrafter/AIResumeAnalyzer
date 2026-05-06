@@ -2,6 +2,12 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { userModel } from "../models/user.model.js";
 import { blacklistTokenModel } from "../models/blacklist.model.js";
+import {
+  AUTH_TOKEN_COOKIE,
+  getAuthCookieOptions,
+  getClearAuthCookieOptions,
+} from "../constants/authCookie.js";
+import { extractAuthToken } from "../utils/authToken.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -39,10 +45,7 @@ export const registerUser = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24,
-    });
+    res.cookie(AUTH_TOKEN_COOKIE, token, getAuthCookieOptions());
 
     return res.status(201).json({
       success: true,
@@ -97,10 +100,11 @@ export const loginUser = async (req, res) => {
       { expiresIn: "1d" }
     );
 
+    res.cookie(AUTH_TOKEN_COOKIE, token, getAuthCookieOptions());
+
     return res.status(200).json({
       success: true,
       message: "Login successful",
-      token,
       user: {
         id: user._id,
         username: user.username,
@@ -119,34 +123,30 @@ export const loginUser = async (req, res) => {
 
 export const logoutUser = async (req, res) => {
   try {
-    // Get token from cookie
-    const token = req.cookies?.token || req.headers["authorization"]?.split(" ")[1];
+    const token = extractAuthToken(req, AUTH_TOKEN_COOKIE);
+    const clearOpts = getClearAuthCookieOptions();
 
     if (!token) {
-      return res.status(400).json({
-        success: false,
-        message: "No token provided for logout.",
+      res.clearCookie(AUTH_TOKEN_COOKIE, clearOpts);
+      return res.status(200).json({
+        success: true,
+        message: "Logged out.",
       });
     }
 
-    // Verify the token is valid (optional but recommended)
     try {
       jwt.verify(token, process.env.JWT_SECRET);
-    } catch (verifyError) {
+    } catch {
+      res.clearCookie(AUTH_TOKEN_COOKIE, clearOpts);
       return res.status(401).json({
         success: false,
         message: "Invalid token.",
       });
     }
 
-    // Add token to blacklist
     await blacklistTokenModel.create({ token });
 
-    // Clear the cookie (if using cookies)
-    res.clearCookie("token", {
-      httpOnly: true,
-      sameSite: "strict",
-    });
+    res.clearCookie(AUTH_TOKEN_COOKIE, clearOpts);
 
     return res.status(200).json({
       success: true,
