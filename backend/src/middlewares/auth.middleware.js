@@ -27,7 +27,7 @@ async function authUser(req, res, next) {
     if (isBlacklisted) {
       return res.status(401).json({
         success: false,
-        message: "Token has been revoked.",
+        message: "Invalid or expired token.",
       });
     }
 
