@@ -19,5 +19,12 @@ router.post("/", authUser, uploadResume, generateInterviewReportController)
  */
 router.get("/:interviewId", authUser, getInterviewReportController)
 
+/**
+ * @route GET /api/interview
+ * @description Get all interview reports of the logged-in user
+ * @access Private
+ */
+router.get("/", authUser, getAllInterviewReportsController)
+
 export default router;
 

@@ -2,6 +2,9 @@ import { PDFParse } from 'pdf-parse';
 import generateInterviewReport from '../services/ai.service.js';
 import interviewReportModel from '../models/interviewReport.model.js';
 
+/**
+ * @description Generate an interview report based on the user's self description, resume PDF, and job description.
+ */
 export async function generateInterviewReportController(req, res) {
     try {
         const { selfDescription, jobDescription } = req.body;
@@ -115,6 +118,9 @@ export async function generateInterviewReportController(req, res) {
     }
 }
 
+/**
+ * @description Get a specific interview report by ID, ensuring it belongs to the authenticated user.
+ */
 export async function getInterviewReportController(req, res) {
     try {
         const { interviewId } = req.params;
@@ -140,6 +146,30 @@ export async function getInterviewReportController(req, res) {
         return res.status(500).json({
             success: false,
             error: 'Internal server error while fetching interview report.'
+        });
+    }
+}
+
+/**
+ * @description Controller to get all interview reports of logged in user.
+ */
+
+export async function getAllInterviewReportsController(req, res) {
+    try {
+        const interviewReports = await interviewReportModel
+            .find({ user: req.user.id })
+            .sort({ createdAt: -1 })
+            .select("title matchScore createdAt updatedAt");
+
+        return res.status(200).json({
+            success: true,
+            data: interviewReports
+        });
+    } catch (error) {
+        console.error('[DEBUG GET ALL] Error:', error.message);
+        return res.status(500).json({
+            success: false,
+            error: 'Internal server error while fetching interview reports.'
         });
     }
 }
