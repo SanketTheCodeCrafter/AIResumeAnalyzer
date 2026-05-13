@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute, PublicRoute } from "./features/auth/components/Protected.jsx";
 import Login from "./features/auth/pages/Login.jsx";
 import Register from "./features/auth/pages/Register.jsx";
-import HomePage from "./pages/HomePage.jsx";
+import Home from "./features/interview/pages/Home.jsx";
 
 function AppRoutes() {
   return (
@@ -23,11 +23,12 @@ function AppRoutes() {
           </PublicRoute>
         }
       />
+
       <Route
-        path="/"
+        path="/interview"
         element={
           <ProtectedRoute>
-            <HomePage />
+            <Home />
           </ProtectedRoute>
         }
       />

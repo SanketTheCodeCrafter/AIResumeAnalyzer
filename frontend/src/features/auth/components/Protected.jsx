@@ -23,7 +23,7 @@ export function PublicRoute({ children }) {
   }
 
   if (authState.isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/interview" replace />;
   }
 
   return children;

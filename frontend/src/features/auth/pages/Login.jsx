@@ -34,7 +34,7 @@ export default function Login() {
     });
 
     if (result.success) {
-      navigate("/", { replace: true });
+      navigate("/interview");
     }
   };
 
