@@ -4,6 +4,7 @@ import { Button } from "../../auth/components/Button.jsx";
 import InterviewForm from "../components/forms/InterviewForm.jsx";
 import { motion } from "framer-motion";
 import { LogOut, Sparkles } from "lucide-react";
+import RecentReports from "../components/reports/RecentReports.jsx";
 
 /* ── Home Page ───────────────────────────────────────────────
  *  Thin page shell.
@@ -74,6 +75,9 @@ function Home() {
                 </section>
 
                 <InterviewForm key="form" />
+                
+                {/* Reports Listing Section */}
+                <RecentReports />
             </div>
 
             {/* Background decoration */}
