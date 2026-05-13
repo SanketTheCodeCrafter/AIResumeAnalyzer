@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Sparkles, Send, BrainCircuit, ClipboardList } from "lucide-react";
 
 import { interviewSchema } from "../validation/interview.validation";
-import { generateInterviewReport } from "../api/interview.api";
+import { generateInterviewReport } from "../services/interview.api";
 import { Label } from "../../auth/components/Label";
 import { Button } from "../../auth/components/Button";
 import { Textarea } from "./Textarea";
@@ -33,7 +33,7 @@ const InterviewForm = ({ onSuccess }) => {
     try {
       setIsSubmitting(true);
       const promise = generateInterviewReport(data);
-      
+
       toast.promise(promise, {
         loading: "Analyzing your resume with AI...",
         success: (response) => {
@@ -61,7 +61,7 @@ const InterviewForm = ({ onSuccess }) => {
       <div className="glass-card p-8 rounded-3xl border border-primary/10 shadow-2xl overflow-hidden relative group">
         {/* Decorative background element */}
         <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors duration-500" />
-        
+
         <div className="flex items-center gap-3 mb-8">
           <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
             <BrainCircuit size={24} />
@@ -127,7 +127,7 @@ const InterviewForm = ({ onSuccess }) => {
                   />
                 )}
               />
-              
+
               <div className="p-4 rounded-xl bg-muted/50 border border-muted-foreground/10 text-xs text-muted-foreground leading-relaxed">
                 <p className="font-semibold text-foreground mb-1 flex items-center gap-1">
                   💡 Pro Tip

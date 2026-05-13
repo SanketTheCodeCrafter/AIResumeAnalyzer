@@ -45,21 +45,46 @@ export const interviewReportSchema = z.object({
 }).describe("Comprehensive structured interview preparation report.");
 
 
+const MODELS = [
+    "gemini-3.1-pro",
+    "gemini-3.1-flash",
+    "gemini-3-pro",
+    "gemini-3-flash",
+    "gemini-3.0-pro",
+    "gemini-3.0-flash",
+    "gemini-2.5-pro",
+    "gemini-2.5-flash"
+];
+
+
+
 export default async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
     const prompt = `Generate an interview report for a candidate with the following details:
                         Resume: ${resume}
                         Self Description: ${selfDescription}
-                        Job Description: ${jobDescription}`
+                        Job Description: ${jobDescription}`;
 
-    const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-        config: {
-            responseMimeType: "application/json",
-            responseJsonSchema: z.toJSONSchema(interviewReportSchema),
+    let lastError = null;
+
+    for (const modelName of MODELS) {
+        try {
+            const response = await ai.models.generateContent({
+                model: modelName,
+                contents: prompt,
+                config: {
+                    responseMimeType: "application/json",
+                    responseJsonSchema: z.toJSONSchema(interviewReportSchema),
+                }
+            });
+
+            const parsed = JSON.parse(response.text);
+            return interviewReportSchema.parse(parsed);
+        } catch (error) {
+            console.error(`AI Model ${modelName} failed:`, error.message);
+            lastError = error;
+            continue; // Try next model
         }
-    })
+    }
 
-    const parsed = JSON.parse(response.text);
-    return interviewReportSchema.parse(parsed);
+    throw new Error(`All AI models failed to generate the report. Last error: ${lastError?.message}`);
 }

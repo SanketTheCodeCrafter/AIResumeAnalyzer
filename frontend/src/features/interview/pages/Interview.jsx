@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, AlertCircle, ChevronRight, LayoutDashboard } from "lucide-react";
 
-import { getInterviewReport } from "../api/interview.api";
+import { getInterviewReport } from "../services/interview.api";
 import ReportSidebar from "../components/report/ReportSidebar";
 import ReportHeader from "../components/report/ReportHeader";
 import MatchScoreCard from "../components/report/MatchScoreCard";
