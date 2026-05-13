@@ -3,6 +3,7 @@ import { ProtectedRoute, PublicRoute } from "./features/auth/components/Protecte
 import Login from "./features/auth/pages/Login.jsx";
 import Register from "./features/auth/pages/Register.jsx";
 import Home from "./features/interview/pages/Home.jsx";
+import Interview from "./features/interview/pages/Interview.jsx";
 
 function AppRoutes() {
   return (
@@ -29,6 +30,15 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Home />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/interview/:interviewId"
+        element={
+          <ProtectedRoute>
+            <Interview />
           </ProtectedRoute>
         }
       />

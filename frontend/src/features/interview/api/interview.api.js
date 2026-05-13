@@ -12,3 +12,6 @@ export const generateInterviewReport = async (data) => {
     },
   });
 };
+export const getInterviewReport = async (id) => {
+  return await httpClient.get(`/api/interview/${id}`);
+};

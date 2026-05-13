@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/hooks/useAuth.js";
 import { Button } from "../../auth/components/Button.jsx";
 import InterviewForm from "../components/InterviewForm.jsx";
@@ -8,13 +9,14 @@ import { LogOut, LayoutDashboard, Sparkles } from "lucide-react";
 function Home() {
   const { authState, logout } = useAuth();
   const { user } = authState;
-  const [report, setReport] = useState(null);
+  const navigate = useNavigate();
 
   const handleSuccess = (reportData) => {
-    setReport(reportData);
-    // You could navigate to a separate report page here
-    // or show it inline below.
+    if (reportData?._id) {
+      navigate(`/interview/${reportData._id}`);
+    }
   };
+
 
   return (
     <main className="min-h-screen bg-background text-foreground selection:bg-primary/20">
@@ -74,42 +76,11 @@ function Home() {
           </motion.p>
         </section>
 
-        <AnimatePresence mode="wait">
-          {!report ? (
-            <InterviewForm key="form" onSuccess={handleSuccess} />
-          ) : (
-            <motion.div
-              key="success-view"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="glass-card p-12 rounded-3xl border border-success/20 text-center space-y-6"
-            >
-              <div className="w-20 h-20 bg-success/10 text-success rounded-full flex items-center justify-center mx-auto mb-4">
-                <Sparkles size={40} />
-              </div>
-              <h2 className="text-3xl font-bold">Report Generated!</h2>
-              <p className="text-muted-foreground max-w-md mx-auto">
-                Your AI-powered interview guide is ready. We've analyzed your profile against the job requirements.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                <Button size="lg" className="rounded-xl px-8 shadow-lg shadow-primary/20">
-                  View Full Report
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  onClick={() => setReport(null)}
-                  className="rounded-xl px-8"
-                >
-                  Analyze New Resume
-                </Button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <InterviewForm key="form" onSuccess={handleSuccess} />
       </div>
 
       {/* Background decoration */}
+
       <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
         <div className="absolute top-[10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-blue-500/5 rounded-full blur-[100px]" />
