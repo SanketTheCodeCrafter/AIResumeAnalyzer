@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../../auth/utils/cn";
+import { cn } from "../../../auth/utils/cn";
 
 const Textarea = React.forwardRef(({ className, ...props }, ref) => {
   return (

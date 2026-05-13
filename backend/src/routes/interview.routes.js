@@ -1,5 +1,5 @@
 import express from "express";
-import {generateInterviewReportController, getInterviewReportController} from "../controllers/interview.controller.js";
+import {generateInterviewReportController, getAllInterviewReportsController, getInterviewReportController} from "../controllers/interview.controller.js";
 import authUser from "../middlewares/auth.middleware.js";
 import { uploadResume } from "../middlewares/file.middleware.js";
 const router = express.Router();

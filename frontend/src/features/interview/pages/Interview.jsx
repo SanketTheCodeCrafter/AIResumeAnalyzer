@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, AlertCircle, ChevronRight, LayoutDashboard } from "lucide-react";
 
-import { getInterviewReport } from "../services/interview.api";
+import { useInterview } from "../hooks/useInterview";
 import ReportSidebar from "../components/report/ReportSidebar";
 import ReportHeader from "../components/report/ReportHeader";
 import MatchScoreCard from "../components/report/MatchScoreCard";
@@ -14,31 +14,26 @@ import EmptyState from "../components/report/EmptyState";
 import { Button } from "../../auth/components/Button";
 import { cn } from "../../auth/utils/cn";
 
+/* ── Interview Report Page ───────────────────────────────────
+ *  Thin page shell.
+ *  Delegates data fetching to useInterview() hook.
+ *  Owns only UI concerns: scroll spy, active section, rendering.
+ * ─────────────────────────────────────────────────────────── */
+
 const Interview = () => {
     const { interviewId } = useParams();
-    const [report, setReport] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { interviewState, fetchReport } = useInterview();
+    const { report, isLoading, error } = interviewState;
     const [activeSection, setActiveSection] = useState("technical");
 
+    /* ── Fetch Report on Mount ───────────────────────────── */
     useEffect(() => {
-        const fetchReport = async () => {
-            try {
-                setLoading(true);
-                const response = await getInterviewReport(interviewId);
-                setReport(response.data);
-            } catch (err) {
-                console.error("Fetch error:", err);
-                setError(err.message || "Failed to load report");
-            } finally {
-                setLoading(false);
-            }
-        };
+        if (interviewId) {
+            fetchReport(interviewId);
+        }
+    }, [interviewId, fetchReport]);
 
-        if (interviewId) fetchReport();
-    }, [interviewId]);
-
-    // Scroll Spy logic
+    /* ── Scroll Spy ──────────────────────────────────────── */
     useEffect(() => {
         const handleScroll = () => {
             const sections = ["technical", "behavioral", "roadmap"];
@@ -60,7 +55,7 @@ const Interview = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    if (loading) {
+    if (isLoading) {
         return (
             <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
                 <motion.div

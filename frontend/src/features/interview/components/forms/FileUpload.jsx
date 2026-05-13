@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Upload, FileText, X, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../auth/utils/cn";
+import { cn } from "../../../auth/utils/cn";
 
 const FileUpload = ({ value, onChange, error, className }) => {
   const [isDragging, setIsDragging] = useState(false);

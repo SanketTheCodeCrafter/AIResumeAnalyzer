@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute, PublicRoute } from "./features/auth/components/Protected.jsx";
+import { InterviewProvider } from "./features/interview/context/interview.context.jsx";
 import Login from "./features/auth/pages/Login.jsx";
 import Register from "./features/auth/pages/Register.jsx";
 import Home from "./features/interview/pages/Home.jsx";
@@ -29,7 +30,9 @@ function AppRoutes() {
         path="/interview"
         element={
           <ProtectedRoute>
-            <Home />
+            <InterviewProvider>
+              <Home />
+            </InterviewProvider>
           </ProtectedRoute>
         }
       />
@@ -38,7 +41,9 @@ function AppRoutes() {
         path="/interview/:interviewId"
         element={
           <ProtectedRoute>
-            <Interview />
+            <InterviewProvider>
+              <Interview />
+            </InterviewProvider>
           </ProtectedRoute>
         }
       />
