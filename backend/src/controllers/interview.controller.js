@@ -35,13 +35,12 @@ export async function generateInterviewReportController(req, res) {
 
         // Parse PDF — pdf-parse v2 exports PDFParse as a named export (no default)
         // getText() returns TextResult { pages, text, total } — NOT a raw string
-        console.log('[DEBUG 1] Starting PDF parse...');
         let resumeContent;
         try {
             const result = await new PDFParse(Uint8Array.from(req.file.buffer)).getText();
             resumeContent = result.text;  // TextResult.text is the concatenated string
         } catch (error) {
-            console.error('[DEBUG 1] PDF parsing error:', error.message);
+            console.error('PDF Parse Error:', error);
             return res.status(400).json({
                 success: false,
                 error: 'Failed to parse the uploaded PDF file.'
@@ -49,7 +48,6 @@ export async function generateInterviewReportController(req, res) {
         }
 
         // Validate extracted text
-        console.log('[DEBUG 2] Extracted text length:', resumeContent?.length);
         if (!resumeContent?.trim()) {
             return res.status(400).json({
                 success: false,
@@ -58,7 +56,6 @@ export async function generateInterviewReportController(req, res) {
         }
 
         // Generate AI report
-        console.log('[DEBUG 3] Starting AI generation...');
         let interviewReportByAi;
         try {
             interviewReportByAi = await generateInterviewReport({
@@ -67,7 +64,7 @@ export async function generateInterviewReportController(req, res) {
                 jobDescription
             });
         } catch (error) {
-            console.error('[DEBUG 3] AI generation error:', error.message);
+            console.error('AI Generation Error:', error);
             return res.status(500).json({
                 success: false,
                 error: 'Failed to generate interview report from AI.'
@@ -75,7 +72,6 @@ export async function generateInterviewReportController(req, res) {
         }
 
         // Validate AI response
-        console.log('[DEBUG 4] AI report keys:', Object.keys(interviewReportByAi));
         if (!interviewReportByAi) {
             return res.status(400).json({
                 success: false,
@@ -84,7 +80,6 @@ export async function generateInterviewReportController(req, res) {
         }
 
         // Save report in database
-        console.log('[DEBUG 5] Saving to database...');
         let interviewReport;
         try {
             interviewReport = await interviewReportModel.create({
@@ -95,14 +90,13 @@ export async function generateInterviewReportController(req, res) {
                 ...interviewReportByAi
             });
         } catch (error) {
-            console.error('[DEBUG 5] Database save error:', error.message);
+            console.error('DB Save Error:', error);
             return res.status(500).json({
                 success: false,
                 error: 'Failed to save interview report to database.'
             });
         }
 
-        console.log('[DEBUG 6] Success!');
         return res.status(201).json({
             success: true,
             message: 'Interview report generated successfully.',
@@ -110,7 +104,7 @@ export async function generateInterviewReportController(req, res) {
         });
 
     } catch (error) {
-        console.error('[DEBUG OUTER] Unexpected error:', error);
+        console.error('Controller Error:', error);
         return res.status(500).json({
             success: false,
             error: 'Internal server error while generating interview report.'
@@ -142,7 +136,6 @@ export async function getInterviewReportController(req, res) {
             data: report
         });
     } catch (error) {
-        console.error('[DEBUG GET] Error:', error.message);
         return res.status(500).json({
             success: false,
             error: 'Internal server error while fetching interview report.'
@@ -166,7 +159,6 @@ export async function getAllInterviewReportsController(req, res) {
             data: interviewReports
         });
     } catch (error) {
-        console.error('[DEBUG GET ALL] Error:', error.message);
         return res.status(500).json({
             success: false,
             error: 'Internal server error while fetching interview reports.'
