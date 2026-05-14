@@ -11,7 +11,7 @@ export function getAuthCookieOptions() {
   return {
     httpOnly: true,
     secure: secureCookieFlag(),
-    sameSite: "lax",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     path: "/",
     maxAge: ONE_DAY_MS,
   };
@@ -22,7 +22,7 @@ export function getClearAuthCookieOptions() {
   return {
     httpOnly: true,
     secure: secureCookieFlag(),
-    sameSite: "lax",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     path: "/",
   };
 }
