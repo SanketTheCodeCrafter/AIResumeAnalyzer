@@ -31,7 +31,6 @@ function Home() {
                     <div className="flex items-center gap-4">
                         <div className="hidden md:flex flex-col items-end mr-2">
                             <span className="text-sm font-medium">{user?.username || "Guest User"}</span>
-                            <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Premium Plan</span>
                         </div>
                         <Button
                             variant="outline"
@@ -48,14 +47,7 @@ function Home() {
 
             <div className="max-w-7xl mx-auto px-4 py-12">
                 <section className="mb-12 text-center space-y-4">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-medium text-primary mb-2 shadow-sm"
-                    >
-                        <Sparkles size={14} className="mr-2" />
-                        AI-Powered Interview Preparation
-                    </motion.div>
+
                     <motion.h1
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -69,8 +61,7 @@ function Home() {
                         transition={{ delay: 0.1 }}
                         className="text-muted-foreground max-w-2xl mx-auto text-lg leading-relaxed"
                     >
-                        Upload your resume and the job description. Our AI will analyze both to generate
-                        tailored interview questions, feedback, and success strategies.
+                        Drop your resume and the job description below to instantly unlock personalized interview strategies, technical deep-dives, and a 7-day success roadmap.
                     </motion.p>
                 </section>
 
