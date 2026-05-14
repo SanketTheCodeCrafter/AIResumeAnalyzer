@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { BrainCircuit } from "lucide-react";
 
@@ -10,12 +11,14 @@ export function AuthLayout({ children, title, subtitle }) {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="absolute top-8 left-8 flex items-center gap-2 text-foreground/80 hover:text-foreground transition-colors"
+        className="absolute top-8 left-8"
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
-          <BrainCircuit className="h-5 w-5 text-primary" />
-        </div>
-        <span className="font-semibold tracking-tight text-lg">AI Resume Analyzer</span>
+        <Link to="/" className="flex items-center gap-2 text-foreground/80 hover:text-foreground transition-colors">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
+            <BrainCircuit className="h-5 w-5 text-primary" />
+          </div>
+          <span className="font-semibold tracking-tight text-lg">AI Resume Analyzer</span>
+        </Link>
       </motion.div>
 
       {/* Main Form Container */}
