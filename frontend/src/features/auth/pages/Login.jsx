@@ -11,6 +11,7 @@ import { AuthLayout } from "../components/AuthLayout";
 import { Input } from "../components/Input";
 import { Label } from "../components/Label";
 import { Button } from "../components/Button";
+import { GoogleLoginButton } from "../components/GoogleLoginButton";
 import { cn } from "../utils/cn";
 
 export default function Login() {
@@ -140,6 +141,21 @@ export default function Login() {
         >
           Sign in
         </Button>
+
+        {/* ── OAuth Divider ─────────────────────────────── */}
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-border" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-card px-2 text-muted-foreground tracking-wider">or</span>
+          </div>
+        </div>
+
+        {/* ── Google Login ──────────────────────────────── */}
+        <GoogleLoginButton
+          onSuccess={() => navigate("/interview")}
+        />
 
         <p className="text-center text-sm text-muted-foreground mt-6">
           Don't have an account?{" "}

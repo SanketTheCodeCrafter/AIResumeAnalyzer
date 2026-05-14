@@ -28,6 +28,17 @@ export function loginUser(credentials) {
 }
 
 /**
+ * Authenticate via Google OAuth.
+ * Sends the Google ID token (credential) to the backend for verification.
+ * Backend verifies with google-auth-library, finds/creates user, sets cookie.
+ * @param {{ credential: string }} payload
+ * @returns {Promise<{ success: boolean, message: string, user: object }>}
+ */
+export function googleLogin(payload) {
+  return httpClient.post("/api/auth/google", payload);
+}
+
+/**
  * End the current session (server blacklists the token).
  * @returns {Promise<{ success: boolean, message: string }>}
  */

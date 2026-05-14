@@ -8,7 +8,43 @@ import {
   getClearAuthCookieOptions,
 } from "../constants/authCookie.js";
 import { extractAuthToken } from "../utils/authToken.js";
+import { verifyAndFindOrCreateUser } from "../services/google.service.js";
 
+/* ── Helpers ──────────────────────────────────────────────────── */
+
+/**
+ * Sign a JWT with a consistent payload shape.
+ * Centralised so every auth path (local + Google) produces identical tokens.
+ */
+function signJwt(user) {
+  return jwt.sign(
+    {
+      id: user._id,
+      email: user.email,
+      username: user.username,
+      provider: user.provider,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+}
+
+/**
+ * Build a sanitised user object for API responses.
+ * Never returns the password hash.
+ */
+function sanitiseUser(user) {
+  return {
+    id: user._id,
+    username: user.username,
+    email: user.email,
+    provider: user.provider,
+    avatar: user.avatar || "",
+    isEmailVerified: user.isEmailVerified,
+  };
+}
+
+/* ── Register (local) ─────────────────────────────────────────── */
 export const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -25,6 +61,15 @@ export const registerUser = async (req, res) => {
     });
 
     if (existingUser) {
+      // If the existing account is a Google-only account with the same email,
+      // tell the user to sign in with Google instead.
+      if (existingUser.provider === "google" && existingUser.email === email.toLowerCase()) {
+        return res.status(409).json({
+          success: false,
+          message: "An account with this email already exists. Please sign in with Google.",
+        });
+      }
+
       return res.status(409).json({
         success: false,
         message: "User with this username or email already exists",
@@ -37,24 +82,16 @@ export const registerUser = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      provider: "local",
     });
 
-    const token = jwt.sign(
-      { id: user._id, email: user.email, username: user.username },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
-
+    const token = signJwt(user);
     res.cookie(AUTH_TOKEN_COOKIE, token, getAuthCookieOptions());
 
     return res.status(201).json({
       success: true,
       message: "User registered successfully",
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-      },
+      user: sanitiseUser(user),
     });
   } catch (error) {
     return res.status(500).json({
@@ -65,6 +102,7 @@ export const registerUser = async (req, res) => {
   }
 };
 
+/* ── Login (local) ────────────────────────────────────────────── */
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -85,6 +123,14 @@ export const loginUser = async (req, res) => {
       });
     }
 
+    // Guard: prevent Google-only users from attempting password login
+    if (user.provider === "google" && !user.password) {
+      return res.status(400).json({
+        success: false,
+        message: "This account uses Google login. Please sign in with Google.",
+      });
+    }
+
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
@@ -94,22 +140,13 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    const token = jwt.sign(
-      { id: user._id, email: user.email, username: user.username },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
-
+    const token = signJwt(user);
     res.cookie(AUTH_TOKEN_COOKIE, token, getAuthCookieOptions());
 
     return res.status(200).json({
       success: true,
       message: "Login successful",
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-      },
+      user: sanitiseUser(user),
     });
   } catch (error) {
     return res.status(500).json({
@@ -120,7 +157,48 @@ export const loginUser = async (req, res) => {
   }
 };
 
+/* ── Google OAuth ─────────────────────────────────────────────── */
+export const googleAuth = async (req, res) => {
+  try {
+    const { credential } = req.body;
 
+    if (!credential) {
+      return res.status(400).json({
+        success: false,
+        message: "Google credential token is required.",
+      });
+    }
+
+    // Service layer handles: token verification → find/create user → account linking
+    const user = await verifyAndFindOrCreateUser(credential);
+
+    const token = signJwt(user);
+    res.cookie(AUTH_TOKEN_COOKIE, token, getAuthCookieOptions());
+
+    return res.status(200).json({
+      success: true,
+      message: "Google authentication successful",
+      user: sanitiseUser(user),
+    });
+  } catch (error) {
+    // Distinguish between Google verification errors and internal errors
+    const isAuthError =
+      error.message.includes("Invalid Google token") ||
+      error.message.includes("Google email is not verified") ||
+      error.message.includes("Token used too late") ||
+      error.message.includes("Wrong number of segments");
+
+    return res.status(isAuthError ? 401 : 500).json({
+      success: false,
+      message: isAuthError
+        ? "Google authentication failed. Please try again."
+        : "Failed to authenticate with Google.",
+      error: error.message,
+    });
+  }
+};
+
+/* ── Logout ───────────────────────────────────────────────────── */
 export const logoutUser = async (req, res) => {
   try {
     const token = extractAuthToken(req, AUTH_TOKEN_COOKIE);
@@ -161,9 +239,11 @@ export const logoutUser = async (req, res) => {
   }
 };
 
+/* ── Get Current User ─────────────────────────────────────────── */
 export const getUser = async (req, res) => {
   try {
-    const user = await userModel.findById(req.user.id);
+    // .select("-password") ensures the password hash is never sent to the client
+    const user = await userModel.findById(req.user.id).select("-password");
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -173,12 +253,12 @@ export const getUser = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User details fetched successfully",
-      user,
+      user: sanitiseUser(user),
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "Failed to get user details", 
+      message: "Failed to get user details",
       error: error.message,
     });
   }

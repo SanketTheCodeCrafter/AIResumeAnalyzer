@@ -1,6 +1,7 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from "react";
 import {
   getCurrentUser,
+  googleLogin,
   loginUser,
   logoutUser,
   registerUser,
@@ -11,7 +12,7 @@ import {
  *
  *  Responsibilities:
  *    1. Bootstrap session on mount (cookie → user)
- *    2. Expose login / register / logout actions
+ *    2. Expose login / register / logout / loginWithGoogle actions
  *    3. Manage loading + error states
  *    4. Provide stable context value (memoized)
  * ─────────────────────────────────────────────────────────── */
@@ -70,7 +71,7 @@ export function AuthProvider({ children }) {
     return error instanceof Error ? error.message : "Something went wrong.";
   }
 
-  /* ── Login ──────────────────────────────────────────────── */
+  /* ── Login (email/password) ────────────────────────────── */
   const login = useCallback(async (credentials) => {
     setAuthState((prev) => ({ ...prev, isSubmitting: true, error: "" }));
 
@@ -128,6 +129,35 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  /* ── Google OAuth ───────────────────────────────────────── */
+  const loginWithGoogle = useCallback(async (credential) => {
+    setAuthState((prev) => ({ ...prev, isSubmitting: true, error: "" }));
+
+    try {
+      const data = await googleLogin({ credential });
+
+      setAuthState({
+        user: data.user,
+        isAuthenticated: true,
+        isBootstrapping: false,
+        isSubmitting: false,
+        error: "",
+      });
+
+      return { success: true };
+    } catch (error) {
+      const message = extractErrorMessage(error);
+
+      setAuthState((prev) => ({
+        ...prev,
+        isSubmitting: false,
+        error: message,
+      }));
+
+      return { success: false, message };
+    }
+  }, []);
+
   /* ── Logout ─────────────────────────────────────────────── */
   const logout = useCallback(async () => {
     setAuthState((prev) => ({ ...prev, isSubmitting: true, error: "" }));
@@ -155,8 +185,8 @@ export function AuthProvider({ children }) {
 
   /* ── Context Value (memoized) ───────────────────────────── */
   const value = useMemo(
-    () => ({ authState, login, register, logout }),
-    [authState, login, register, logout]
+    () => ({ authState, login, register, logout, loginWithGoogle }),
+    [authState, login, register, logout, loginWithGoogle]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
