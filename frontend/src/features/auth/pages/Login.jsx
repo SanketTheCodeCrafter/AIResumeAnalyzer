@@ -116,17 +116,7 @@ export default function Login() {
           </AnimatePresence>
         </div>
 
-        {/* Remember Me */}
-        <div className="flex items-center space-x-2 pt-1 pb-2">
-          <input
-            type="checkbox"
-            id="remember"
-            className="peer h-4 w-4 shrink-0 rounded-sm border border-input ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none checked:bg-primary checked:border-primary checked:after:content-['✓'] checked:after:text-primary-foreground checked:after:text-xs checked:after:flex checked:after:items-center checked:after:justify-center transition-all cursor-pointer bg-background"
-          />
-          <Label htmlFor="remember" className="font-normal cursor-pointer text-muted-foreground">
-            Remember me for 30 days
-          </Label>
-        </div>
+
 
         {/* Global Error */}
         <AnimatePresence>

@@ -41,10 +41,7 @@ export function AuthLayout({ children, title, subtitle }) {
           {children}
         </div>
 
-        {/* Footer info */}
-        <div className="mt-8 text-center text-xs text-muted-foreground/60 max-w-sm mx-auto">
-          By continuing, you agree to our Terms of Service and Privacy Policy. Securely powered by advanced ATS intelligence.
-        </div>
+
       </motion.div>
     </div>
   );
