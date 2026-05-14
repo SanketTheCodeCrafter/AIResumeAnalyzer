@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../auth/hooks/useAuth.js";
 import { Button } from "../../auth/components/Button.jsx";
 import InterviewForm from "../components/forms/InterviewForm.jsx";
 import { motion } from "framer-motion";
 import { LogOut, Sparkles } from "lucide-react";
 import RecentReports from "../components/reports/RecentReports.jsx";
+import { LogoutConfirmModal } from "../components/LogoutConfirmModal.jsx";
 
 /* ── Home Page ───────────────────────────────────────────────
  *  Thin page shell.
@@ -15,6 +16,7 @@ import RecentReports from "../components/reports/RecentReports.jsx";
 function Home() {
     const { authState, logout } = useAuth();
     const { user } = authState;
+    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
     return (
         <main className="min-h-screen bg-background text-foreground selection:bg-primary/20">
@@ -35,7 +37,7 @@ function Home() {
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={logout}
+                            onClick={() => setShowLogoutConfirm(true)}
                             className="gap-2 rounded-xl border-border/60 hover:bg-destructive/5 hover:text-destructive hover:border-destructive/20 transition-all"
                         >
                             <LogOut size={16} />
@@ -66,7 +68,7 @@ function Home() {
                 </section>
 
                 <InterviewForm key="form" />
-                
+
                 {/* Reports Listing Section */}
                 <RecentReports />
             </div>
@@ -76,6 +78,16 @@ function Home() {
                 <div className="absolute top-[10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-blue-500/5 rounded-full blur-[100px]" />
             </div>
+
+            {/* Logout Confirmation Modal */}
+            <LogoutConfirmModal
+                isOpen={showLogoutConfirm}
+                onClose={() => setShowLogoutConfirm(false)}
+                onConfirm={() => {
+                    setShowLogoutConfirm(false);
+                    logout();
+                }}
+            />
         </main>
     );
 }

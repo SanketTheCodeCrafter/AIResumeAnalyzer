@@ -86,7 +86,7 @@ const Interview = () => {
                 <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[100px] -ml-48 -mb-48" />
             </div>
 
-            <main className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+            <main className="max-w-7xl mx-auto px-4 pt-8 pb-32 md:pt-12 lg:pb-12">
                 {/* Breadcrumbs */}
                 <nav className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest mb-8">
                     <Link to="/interview" className="hover:text-primary transition-colors flex items-center gap-1.5">

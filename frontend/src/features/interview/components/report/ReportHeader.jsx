@@ -1,7 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Share2, Download, MoreVertical, Sparkles } from "lucide-react";
-import { Button } from "../../../auth/components/Button";
+import { Sparkles } from "lucide-react";
 
 const ReportHeader = ({ title }) => {
   return (
@@ -21,19 +20,7 @@ const ReportHeader = ({ title }) => {
         </p>
       </div>
 
-      <div className="flex items-center gap-3">
-        <Button variant="outline" size="sm" className="rounded-xl gap-2 border-border/60">
-          <Share2 size={16} />
-          Share
-        </Button>
-        <Button variant="outline" size="sm" className="rounded-xl gap-2 border-border/60">
-          <Download size={16} />
-          Download PDF
-        </Button>
-        <Button variant="outline" size="icon" className="rounded-xl border-border/60">
-          <MoreVertical size={18} />
-        </Button>
-      </div>
+
     </header>
   );
 };
