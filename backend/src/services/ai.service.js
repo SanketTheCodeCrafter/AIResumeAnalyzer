@@ -41,7 +41,7 @@ export const interviewReportSchema = z.object({
     technicalQuestions: z.array(questionSchema).describe("List of 3-5 technical questions targeting the candidate's specific background."),
     behaviouralQuestions: z.array(questionSchema).describe("List of 2-3 behavioral questions targeting cultural fit and soft skills."),
     skillGaps: z.array(skillGapSchema).describe("List of up to 5 critical skill gaps. Empty array if perfect match."),
-    preparationPlan: z.array(preparationPlanSchema).describe("Structured study plan spanning 3-7 days based on skill gaps.")
+    preparationPlan: z.array(preparationPlanSchema).length(7).describe("Structured study plan spanning exactly 7 days based on skill gaps.")
 }).describe("Comprehensive structured interview preparation report.");
 
 
@@ -62,7 +62,9 @@ export default async function generateInterviewReport({ resume, selfDescription,
     const prompt = `Generate an interview report for a candidate with the following details:
                         Resume: ${resume}
                         Self Description: ${selfDescription}
-                        Job Description: ${jobDescription}`;
+                        Job Description: ${jobDescription}
+                        
+                        IMPORTANT: The preparation plan MUST contain exactly 7 days.`;
 
     let lastError = null;
 
