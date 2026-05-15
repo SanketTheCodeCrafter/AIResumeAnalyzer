@@ -14,7 +14,7 @@ AI Resume Analyzer is a production-grade web application that leverages advanced
 
 ---
 
-## 📺 Demo & Screenshots
+## 📺 Demo
 
 > **Live Demo:** https://ai-resume-analyzer-nine-drab.vercel.app
 
