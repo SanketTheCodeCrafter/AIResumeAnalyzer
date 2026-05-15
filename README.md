@@ -14,13 +14,21 @@ AI Resume Analyzer is a production-grade web application that leverages advanced
 
 ---
 
-## 📺 Demo
+## 📺 Demo & Screenshots
 
-> **Live Demo:** [Placeholder for Live Link]  
-> **Frontend Repo:** [Placeholder for GitHub Link]  
-> **Backend Repo:** [Placeholder for GitHub Link]
+> **Live Demo:** https://ai-resume-analyzer-nine-drab.vercel.app
 
-*(Add Demo Video / GIF Preview Here)*
+### Landing Page
+![Landing Page](./frontend/public/landing-page.png)
+
+### Interview Analysis Form
+![Interview Form](./frontend/public/interview-form.png)
+
+### AI Analysis Report
+![Analysis Report](./frontend/public/analysis-report.png)
+
+### Technical Deep Dive
+![Technical Deep Dive](./frontend/public/technical-deep-dive.png)
 
 ---
 
@@ -60,7 +68,6 @@ AI Resume Analyzer is a production-grade web application that leverages advanced
 | **Frontend** | React (v19), Vite, Tailwind CSS, Framer Motion, React Router v7, React Hook Form, Zod, Lucide React, Axios |
 | **Backend** | Node.js, Express.js, MongoDB, Mongoose, Multer, PDF-Parse, JWT, Cookie-Parser, Express-Rate-Limit, Bcrypt.js |
 | **AI Integration** | Google GenAI API (`@google/genai`), Prompt Engineering, Structured JSON Generation |
-| **Deployment** | (Placeholder: Vercel for Frontend, Render/Railway for Backend, MongoDB Atlas) |
 
 ---
 
@@ -214,7 +221,6 @@ VITE_GOOGLE_CLIENT_ID=your_google_oauth_client_id
 
 ## 📸 Screenshots
 
-*(Replace placeholders with actual images)*
 
 | Landing Page | Dashboard |
 | :---: | :---: |
@@ -267,13 +273,6 @@ Building this application provided deep insights into full-stack architecture an
 2.  **State Management & Auth:** Transitioning from local storage JWTs to HTTP-only cookies required a deeper understanding of CORS policies and cross-origin credential handling.
 3.  **PDF Processing:** Handling file buffers securely and efficiently in Node.js, ensuring that memory limits weren't exceeded during concurrent user uploads.
 
----
-
-## 🗣️ Interview Discussion Points
-
-*   **"How does your AI integration work?"** -> "I extract raw text from PDF files using `pdf-parse`, sanitize it, and pass it into a highly structured prompt. I instruct the Gemini API to return a rigid JSON structure representing the match score, gaps, and dynamic questions, which I then parse and persist in MongoDB."
-*   **"Why did you choose a Feature-Based frontend architecture?"** -> "As the app scales, having all components in one folder becomes unmanageable. Grouping logic by domains (auth, interview) ensures that updating one feature doesn't inadvertently break another, mimicking enterprise monorepo structures."
-*   **"How do you handle security?"** -> "I've prioritized security by using HTTP-Only cookies to prevent XSS, Bcrypt for hashing, Zod for strict payload validation at the edge, and Rate Limiting to deter brute-force."
 
 ---
 
@@ -296,8 +295,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 👨‍💻 Author
 
-**[Your Name]**
-*   **Website:** [Your Portfolio Link]
-*   **GitHub:** [@your-username](https://github.com/your-username)
-*   **LinkedIn:** [Your LinkedIn Profile]
-*   **Email:** [Your Email]
+**Sanket Nagap**
+*   **LinkedIn:** https://www.linkedin.com/in/sanket-nagap/
+*   **Email:** sanket.nagap3@gmail.com
+*   **GitHub:** https://github.com/SanketTheCodeCrafter
