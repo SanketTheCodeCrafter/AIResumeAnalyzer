@@ -285,6 +285,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## 👨‍💻 Author
 
 **Sanket Nagap**
-*   **LinkedIn:** https://www.linkedin.com/in/sanket-nagap/
-*   **Email:** sanket.nagap3@gmail.com
-*   **GitHub:** https://github.com/SanketTheCodeCrafter
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/sanket-nagap/)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/SanketTheCodeCrafter)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:sanket.nagap3@gmail.com)
