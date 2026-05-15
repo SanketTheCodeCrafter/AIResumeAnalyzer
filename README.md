@@ -18,17 +18,6 @@ AI Resume Analyzer is a production-grade web application that leverages advanced
 
 > **Live Demo:** https://ai-resume-analyzer-nine-drab.vercel.app
 
-### Landing Page
-![Landing Page](./frontend/public/landing-page.png)
-
-### Interview Analysis Form
-![Interview Form](./frontend/public/interview-form.png)
-
-### AI Analysis Report
-![Analysis Report](./frontend/public/analysis-report.png)
-
-### Technical Deep Dive
-![Technical Deep Dive](./frontend/public/technical-deep-dive.png)
 
 ---
 
@@ -224,11 +213,11 @@ VITE_GOOGLE_CLIENT_ID=your_google_oauth_client_id
 
 | Landing Page | Dashboard |
 | :---: | :---: |
-| ![Landing Placeholder](https://via.placeholder.com/600x400?text=Landing+Page) | ![Dashboard Placeholder](https://via.placeholder.com/600x400?text=User+Dashboard) |
+| ![Landing Page](./frontend/public/LandingPage.png) | ![Dashboard](./frontend/public/UploadPage.png) |
 
 | AI Analysis Report | Interview Questions |
 | :---: | :---: |
-| ![Analysis Placeholder](https://via.placeholder.com/600x400?text=AI+Match+Score) | ![Questions Placeholder](https://via.placeholder.com/600x400?text=Generated+Questions) |
+| ![Analysis Report](./frontend/public/AIAnalysisPage.png) | ![Interview Questions](./frontend/public/InterviewQuestions.png) |
 
 ---
 
